@@ -69,7 +69,7 @@
         restrict: 'A',
         require: '^form',
         compile: function(elem, attrs) {
-          if (attrs['showErrors'].indexOf('skipFormGroupCheck') === -1) {
+          if (!showErrorsConfig.skipFormGroupCheck && attrs['showErrors'].indexOf('skipFormGroupCheck') === -1) {
             if (!(elem.hasClass('form-group') || elem.hasClass('input-group'))) {
               throw "show-errors element does not have the 'form-group' or 'input-group' class";
             }
@@ -81,19 +81,24 @@
   ]);
 
   showErrorsModule.provider('showErrorsConfig', function() {
-    var _showSuccess, _trigger;
+    var _showSuccess, _skipFormGroupCheck, _trigger;
     _showSuccess = false;
     _trigger = 'blur';
+    _skipFormGroupCheck = false;
     this.showSuccess = function(showSuccess) {
       return _showSuccess = showSuccess;
     };
     this.trigger = function(trigger) {
       return _trigger = trigger;
     };
+    this.skipFormGroupCheck = function(skipFormGroupCheck) {
+      return _skipFormGroupCheck = skipFormGroupCheck;
+    };
     this.$get = function() {
       return {
         showSuccess: _showSuccess,
-        trigger: _trigger
+        trigger: _trigger,
+        skipFormGroupCheck: _skipFormGroupCheck
       };
     };
   });

@@ -58,7 +58,7 @@ showErrorsModule.directive 'showErrors',
       restrict: 'A'
       require: '^form'
       compile: (elem, attrs) ->
-        if attrs['showErrors'].indexOf('skipFormGroupCheck') == -1
+        if not showErrorsConfig.skipFormGroupCheck && attrs['showErrors'].indexOf('skipFormGroupCheck') == -1
           unless elem.hasClass('form-group') or elem.hasClass('input-group')
             throw "show-errors element does not have the 'form-group' or 'input-group' class"
         linkFn
@@ -68,15 +68,20 @@ showErrorsModule.directive 'showErrors',
 showErrorsModule.provider 'showErrorsConfig', ->
   _showSuccess = false
   _trigger = 'blur'
+  _skipFormGroupCheck = false
 
   @showSuccess = (showSuccess) ->
     _showSuccess = showSuccess
     
   @trigger = (trigger) ->
     _trigger = trigger
+    
+  @skipFormGroupCheck = (skipFormGroupCheck) ->
+    _skipFormGroupCheck = skipFormGroupCheck
 
   @$get = ->
     showSuccess: _showSuccess
     trigger: _trigger
+    skipFormGroupCheck: _skipFormGroupCheck
 
   return
